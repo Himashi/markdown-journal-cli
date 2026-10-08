@@ -1,7 +1,7 @@
 import argparse
 import sys
 import questionary
-from journal.core import add_entry, list_entries, search_entries
+from journal.core import add_entry, list_entries, search_entries, export_entries_to_html
 from rich.console import Console
 
 console = Console()
@@ -16,6 +16,7 @@ def main_menu():
             "✨ Create a new entry",
             "📖 List all entries",
             "🔍 Search entries by keyword",
+            "🌐 Export entries to HTML",
             "🚪 Exit"
         ]
     ).ask()
@@ -30,6 +31,8 @@ def main_menu():
         handle_list_entries()
     elif "Search" in action:
         handle_search_entries()
+    elif "Export" in action:
+        handle_export()
 
 def handle_new_entry(title=None, content=None, tags=None):
     if not title:
@@ -77,6 +80,15 @@ def handle_search_entries(keyword=None):
         for r in results:
             console.print(f" - {r.name}")
 
+def handle_export():
+    results = export_entries_to_html()
+    if not results:
+        console.print("[yellow]No entries found to export.[/yellow]")
+    else:
+        console.print(f"[bold green]✨ Successfully exported {len(results)} entries to HTML:[/bold green]")
+        for r in results:
+            console.print(f" - {r}")
+
 def main():
     parser = argparse.ArgumentParser(description="Markdown Personal Journal & Search CLI")
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
@@ -94,6 +106,9 @@ def main():
     search_parser = subparsers.add_parser("search", help="Search entries by keyword")
     search_parser.add_argument("keyword", nargs="?", help="Keyword to search for")
 
+    # 'export' command
+    subparsers.add_parser("export", help="Export all journal entries to HTML")
+
     args = parser.parse_args()
 
     # If no command is provided, launch the interactive main menu hub!
@@ -105,6 +120,8 @@ def main():
         handle_list_entries()
     elif args.command == "search":
         handle_search_entries(args.keyword)
+    elif args.command == "export":
+        handle_export()
     else:
         parser.print_help()
 
