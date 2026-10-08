@@ -9,3 +9,6 @@ All notable changes to this project will be documented in this file.
 - Interactive prompting menus using `questionary` when command-line arguments are omitted.
 - Multi-line body writing support (using Alt+Enter) for long, detailed journal entries.
 - Stunning terminal formatting, tables/lists, and color-coded feedback messages using `rich`.
+
+## 1.1.0
+- Interactive Main Menu Hub: running `python -m journal.cli` without arguments now launches a user-friendly selection menu.
